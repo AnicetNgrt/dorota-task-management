@@ -32,7 +32,7 @@ pkill -f "next dev" 2>/dev/null || true
 sleep 1
 
 # Start production server
-nohup npm start -- --port 3000 > /tmp/next-prod.log 2>&1 &
+nohup npm start -- --port 3000 --hostname 0.0.0.0 > /tmp/next-prod.log 2>&1 &
 echo "Production server starting on port 3000..."
 
 # Wait for it to be ready
