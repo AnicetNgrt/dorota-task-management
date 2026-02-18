@@ -7,7 +7,6 @@ import {
   eachDayOfInterval,
   format,
   isToday,
-  isSameDay,
 } from "date-fns";
 import type { Task } from "@/lib/types";
 
@@ -40,7 +39,7 @@ export function WeekView({ date, onDayClick }: WeekViewProps) {
   }, [date.toISOString()]);
 
   return (
-    <div className="grid grid-cols-7 gap-2">
+    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
       {days.map((day) => {
         const dateStr = format(day, "yyyy-MM-dd");
         const dayTasks = tasksByDay[dateStr] ?? [];

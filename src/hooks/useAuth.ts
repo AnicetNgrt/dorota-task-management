@@ -8,6 +8,7 @@ export function useAuth() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -19,13 +20,20 @@ export function useAuth() {
           router.push("/login");
         }
       })
+      .catch(() => {
+        setError("Failed to check authentication");
+      })
       .finally(() => setLoading(false));
   }, [router]);
 
   const logout = useCallback(async () => {
-    await fetch("/api/auth/me", { method: "DELETE" });
+    try {
+      await fetch("/api/auth/me", { method: "DELETE" });
+    } catch {
+      // Logout even if the request fails
+    }
     router.push("/login");
   }, [router]);
 
-  return { user, loading, logout };
+  return { user, loading, error, logout };
 }

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -21,7 +20,7 @@ import { WinsView } from "@/components/WinsView";
 import type { CalendarView, TaskCategory } from "@/lib/types";
 
 export default function DashboardPage() {
-  const { user, loading: authLoading, logout } = useAuth();
+  const { user, loading: authLoading, error: authError, logout } = useAuth();
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<CalendarView>("day");
   const [showWins, setShowWins] = useState(false);
@@ -32,12 +31,16 @@ export default function DashboardPage() {
     doneTasks,
     generalTasks,
     loading: tasksLoading,
+    error: tasksError,
+    clearError,
     addTask,
     updateTask,
     deleteTask,
     reorderTask,
     forwardTasks,
   } = useTasks(date);
+
+  const displayError = authError || tasksError;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -113,6 +116,18 @@ export default function DashboardPage() {
           </button>
         </div>
       </header>
+
+      {displayError && (
+        <div className="bg-danger/10 border-b border-danger/20 px-6 py-2 flex items-center justify-between">
+          <p className="text-danger text-sm">{displayError}</p>
+          <button
+            onClick={clearError}
+            className="text-danger hover:text-danger/70 text-sm font-medium transition-colors"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         {/* Calendar Navigation */}
